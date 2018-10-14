@@ -48,6 +48,8 @@ unsigned long expanded;
 #define UP 2
 #define DOWN 3
 
+#define TILES 16
+
 /*
  * Helper arrays for the applicable function
  * applicability of operators: 0 = left, 1 = right, 2 = up, 3 = down
@@ -85,12 +87,15 @@ void printf_comma (long unsigned int n) {
 /* return the sum of manhattan distances from state to goal */
 int manhattan( int* state )
 {
-	int sum = 0;
+	int sum = 0, i = 0, pi, fi, taxicab;
 
-	/**
-	 * FILL WITH YOUR CODE
-	 */
-
+	for (i = 0; i < TILES; i++) {
+		pi = i, fi = state[i];
+		// Compute Manhattan dist (distance between present and final rows and cols)
+		taxicab = abs((fi / 4) - (pi / 4)) + abs((fi % 4) - (pi % 4));
+		printf("taxicab(%d) = ");
+		sum += taxicab;
+	}
 
 	return( sum );
 }
