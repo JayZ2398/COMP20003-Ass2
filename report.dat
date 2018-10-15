@@ -196,3 +196,69 @@ Puzzles/simple_puzzle_3
 Puzzles/simple_puzzle_3
 	Soulution = 4, Generated = 7, Expanded = 0, Time = 0.000608, Expanded/Second = 0.000000
 
+Puzzles/simple_puzzle_3
+	Soulution = 4, Generated = 7, Expanded = 0, Time = 0.000354, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_3
+	Soulution = 4, Generated = 7, Expanded = 0, Time = 0.000037, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = 4, Generated = 5, Expanded = 0, Time = 0.000120, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = 4, Generated = 5, Expanded = 3, Time = 0.000119, Expanded/Second = 25210.089844
+
+Puzzles/simple_puzzle_4
+	Soulution = 8, Generated = 16, Expanded = 7, Time = 0.000111, Expanded/Second = 63063.046875
+
+Puzzles/simple_puzzle_5
+	Soulution = 15, Generated = 22, Expanded = 14, Time = 0.000086, Expanded/Second = 162790.781250
+
+Puzzles/simple_puzzle_1
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000026, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = -1, Generated = 3, Expanded = 0, Time = 0.000052, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = -1, Generated = 3, Expanded = 0, Time = 0.000054, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = -1, Generated = 11, Expanded = 0, Time = 0.000194, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = -1, Generated = 11, Expanded = 0, Time = 0.000114, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = 0, Generated = 0, Expanded = 0, Time = 0.000002, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = 0, Generated = 0, Expanded = 0, Time = 0.000002, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = 4, Generated = 5, Expanded = 3, Time = 0.000461, Expanded/Second = 6507.593750
+
+Puzzles/simple_puzzle_3
+	Soulution = 4, Generated = 7, Expanded = 3, Time = 0.000247, Expanded/Second = 12145.748047
+
+Puzzles/simple_puzzle_4
+	Soulution = 8, Generated = 16, Expanded = 7, Time = 0.000529, Expanded/Second = 13232.515625
+
+Puzzles/simple_puzzle_5
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000007, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_5
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000009, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_5
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000007, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_4
+	Soulution = 8, Generated = 16, Expanded = 7, Time = 0.001781, Expanded/Second = 3930.375977
+
+Puzzles/simple_puzzle_5
+	Soulution = -1, Generated = 0, Expanded = 0, Time = 0.000009, Expanded/Second = 0.000000
+
+Puzzles/simple_puzzle_5
+	Soulution = 15, Generated = 22, Expanded = 14, Time = 0.002456, Expanded/Second = 5700.325684
+

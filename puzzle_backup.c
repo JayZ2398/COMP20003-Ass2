@@ -24,7 +24,6 @@ typedef struct node{
 /* Jack's functions */
 void copy_state(node* to, node* from);
 int min(int a, int b);
-int reverse_move(int move);
 
 /**
  * Global Variables
@@ -124,7 +123,6 @@ void apply( node* n, int op )
 {
 	int t;
 
-	printf("Applying move %s\n", moves[op]);
 	//find tile that has to be moved given the op and blank_pos
 	t = blank_pos + (op == 0 ? -1 : (op == 1 ? 1 : (op == 2 ? -4 : 4)));
 
@@ -134,63 +132,59 @@ void apply( node* n, int op )
 
 	//update blank pos
 	blank_pos = t;
-	printf("The blank is in position %d\n", blank_pos);
 }
 
 /* Recursive IDA */
 node* ida( node* node, int threshold, int* newThreshold )
 {
+	struct node *new = NULL;
 	struct node *r = NULL;
-	int current_move;
+	int blank_pos_backup = blank_pos;
 
 	// Generate possible actions
-	int ap_actions[4];
+	int *ap_actions = malloc(MIN_MOVES * sizeof(int));
 	int actions = 0, i;
 	for (i = 0; i < MAX_MOVES; i++) {
 		if (applicable(i)) {
+			// Increase size of actions array if necessary
+			if (actions >= 2) {
+				ap_actions = realloc(ap_actions, (actions+1)*sizeof(int));
+			}
 			ap_actions[actions++] = i;
 		}
 	}
 
 	// For each action
 	for (i = 0; i < actions; i++) {
-		// Keep track of last move
-		current_move = ap_actions[i];
+		// Keep track of original blank_pos
+		blank_pos = blank_pos_backup;
 		// Generate the new node, its cost (n.g + 1) and its estimated cost f = g+h
-		printf("### BEFORE\n");
-		print_state(node->state);
-		printf("### Apply move %s on %d\n", moves[current_move], blank_pos);
+		new = malloc(sizeof(struct node));
 		generated++;
-		apply(node, current_move);
-		node->g = node->g + 1;
-		node->f = node->g + manhattan(node->state);
-
-		printf("### AFTER\n");
-		print_state(node->state);
+		copy_state(new, node);
+		apply(new, ap_actions[i]);
+		new->g = node->g + 1;
+		new->f = new->g + manhattan(new->state);
 
 		// If f(n') is greater than the threshold
-		if (node->f > threshold) {
-			// Update next preferred threshold
-			*newThreshold = min(*newThreshold, node->f);
-			printf("HEY");
-		} else { 		// Otherwise, investigate
+		if (new->f > threshold) {
+			// Update *newThreshold to min(f(n'), *newThreshold)
+			*newThreshold = min(*newThreshold, new->f);
+		}
+		// Otherwise, investigate
+		else {
 			// If heuristic is zero, solution found, return n'
-			if (node->f == node->g) return node;
+			if (new->f == new->g) return new;
 			// Run IDA on n' with B and B'
 			expanded++; level++;
-			r = ida(node, threshold, newThreshold);
+			r = ida(new, threshold, newThreshold);
 			level--;
 			// If r isn't NULL (i.e. found solution), return r
 			if (r != NULL) return r;
 		}
-		// If we didn't break the search in the loop, revert action
-		int reverse = reverse_move(current_move);
-		printf("### Revert move %s (%d) on %d\n", moves[reverse], reverse, blank_pos);
-		apply(node, reverse);
-		printf("### AFTER REVERT\n");
-		print_state(node->state);
-		node->g --;
 	}
+	free(new);
+	blank_pos = blank_pos_backup;
 	return( NULL );
 }
 
@@ -200,7 +194,6 @@ int IDA_control_loop(  ){
 	node* r = NULL;
 
 	int threshold, newThreshold;
-	struct node puzzle;
 
 	/* initialize statistics */
 	generated = 0;
@@ -213,15 +206,12 @@ int IDA_control_loop(  ){
 	printf( "Initial Estimate = %d\nThreshold = \n", threshold );
 
 	while (r == NULL) {
-		copy_state(&puzzle, &initial_node);
-		puzzle.g = 0;
-
 		printf("### Threshold = %d | blank_pos = %d \n# Initial node:\n", threshold, blank_pos);
-		print_state(puzzle.state);
-
+		print_state(initial_node.state);
 		newThreshold = INFTY;
-
-		r = ida(&puzzle, threshold, &newThreshold);
+		// need to reassign intial state to initial_node here?
+		initial_node.g = 0;
+		r = ida(&initial_node, threshold, &newThreshold);
 		if (r == NULL) threshold = newThreshold;
 	}
 
@@ -326,8 +316,4 @@ void copy_state(node* to, node* from) {
 
 int min(int a, int b) {
 	return (a > b) ? b : a;
-}
-
-int reverse_move(int move) {
-	return (move == LEFT ? RIGHT : (move == RIGHT ? LEFT : (move == UP ? DOWN : UP)));
 }
