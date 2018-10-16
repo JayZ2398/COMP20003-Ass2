@@ -26,8 +26,9 @@ typedef struct node{
 void copy_state(node* to, node* from);
 int min(int a, int b);
 int reverse_move(int move);
-int manhat_linear(int *state);
 int taxicab(int init, int final);
+int manhat_linear(int *state);
+int last_moves_manhattan(int *state);
 
 /**
  * Global Variables
@@ -61,6 +62,7 @@ unsigned long expanded;
 #define MIN_MOVES 2
 #define MAX_MOVES 4
 #define CHARS 4 // maybe remove?
+#define PER_ROW 4
 
 /*
  * Helper arrays for the applicable function
@@ -100,14 +102,14 @@ void printf_comma (long unsigned int n) {
 /* return the sum of manhattan distances from state to goal */
 int manhattan( int* state )
 {
-	int sum = 0, i = 0, final;
+	int sum = 0, i = 0, tile;
 
 	for (i = 0; i < TILES; i++) {
-		final = state[i];
+		tile = state[i];
 		// Disregard blank misplacement
-		if (final == 0) continue;
+		if (tile == 0) continue;
 		// Compute Manhattan dist (distance between present and final rows and cols)
-		sum += taxicab(i, final);
+		sum += taxicab(i, tile);
 	}
 
 	return( sum );
@@ -154,7 +156,7 @@ node* ida( node* node, int threshold, int* newThreshold )
 		generated++;
 		apply(node, move);
 		node->g ++;
-		node->f = node->g + manhattan(node->state);
+		node->f = node->g + last_moves_manhattan(node->state);
 		node->last = move;
 
 		// If f(n') is greater than the threshold
@@ -193,23 +195,21 @@ int IDA_control_loop(  ){
 	/* compute initial threshold B */
 	initial_node.f = threshold = manhattan( initial_node.state );
 
-	printf( "Initial Estimate = %d\nThreshold = \n", threshold );
+	printf( "Initial Estimate = %d\nThreshold = ", threshold );
 
 	while (r == NULL) {
 		copy_state(&puzzle, &initial_node);
 		puzzle.g = 0;
 
-		printf("### Threshold = %d expanded ", threshold);
+		printf("%d ", threshold);
 
 		newThreshold = INFTY;
 
 		r = ida(&puzzle, threshold, &newThreshold);
-		printf("%16lu nodes\n", expanded);
 		if (r == NULL) threshold = newThreshold;
 	}
 
 	if(r) {
-		print_state(r->state);
 		return r->g;
 	}	else
 		return -1;
@@ -253,10 +253,10 @@ int main( int argc, char **argv )
 				tile = strtok( NULL, " " );
 			}
 	}
-
 	else{
 		fprintf( stderr, "Filename empty\"\n" );
 		return( -2 );
+
 	}
 	fclose(initFile);
 
@@ -270,7 +270,9 @@ int main( int argc, char **argv )
 	initial_node.g=0;
 	initial_node.f=0;
 
+	printf("Initial State:\n");
 	print_state( initial_node.state );
+
 
 	/* solve */
 	float t0 = compute_current_time();
@@ -278,7 +280,6 @@ int main( int argc, char **argv )
 	solution_length = IDA_control_loop();
 
 	float tf = compute_current_time();
-
 
 	/* report results */
 	printf( "\nSolution = %d\n", solution_length);
@@ -318,6 +319,7 @@ int reverse_move(int move) {
 }
 
 /*Compute the linear conflicts for a given state for the heuristic function.*/
+// Note - this was not implemented as it did not optimise the solution.
 int manhat_linear(int *state) {
 	int sum = 0, i;
 	int tile, above, prev = INFTY;
@@ -326,7 +328,7 @@ int manhat_linear(int *state) {
 		tile = state[i];
 		if (tile == 0) continue;
 		sum += taxicab(i, tile);
-    // Detect conflicts in row
+    // Detect conflicts in row (4 tiles each)
     if (tile == prev - 1 && tile/4 == i/4) {
 			sum += 2;
     }
@@ -347,4 +349,24 @@ int manhat_linear(int *state) {
 int taxicab(int init, int final) {
 	// Compute Manhattan dist (distance between present and final rows and cols)
 	return abs((final / 4) - (init / 4)) + abs((final % 4) - (init % 4));
+}
+
+int last_moves_manhattan(int *state) {
+	int sum = 0, i = 0, last_moves = 0, tile;
+
+	for (i = 0; i < TILES; i++) {
+		tile = state[i];
+
+		// Disregard blank misplacement
+		if (tile == 0) continue;
+
+		// Compute Manhattan dist (distance between present and final rows and cols)
+		sum += taxicab(i, tile);
+
+		// Compute last moves additional heuristic
+		if (tile == 1 && i / 4 != 0) last_moves++; // 1-tile isn't in top row
+		if (tile == 5 && i % 4 != 0) last_moves++; // 5-tile isn't in left column
+	}
+	if (last_moves >= 2) sum += last_moves;
+	return( sum );
 }
