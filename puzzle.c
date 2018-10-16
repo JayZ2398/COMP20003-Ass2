@@ -44,7 +44,6 @@ node initial_node;
 // Statistics about the number of generated and expendad nodes
 unsigned long generated;
 unsigned long expanded;
-unsigned long level;
 
 /**
  * The id of the four available actions for moving the blank (empty slot). e.x.
@@ -72,7 +71,6 @@ int ap_opRight[]  = { 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0 };
 int ap_opUp[]  = { 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 int ap_opDown[]  = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 };
 int *ap_ops[] = { ap_opLeft, ap_opRight, ap_opUp, ap_opDown };
-int rev_ops[] = { RIGHT, LEFT, DOWN, UP };
 
 char *moves[CHARS] = {"LEFT", "RIGHT", "UP", "DOWN"};
 
@@ -167,13 +165,13 @@ node* ida( node* node, int threshold, int* newThreshold )
 			// If heuristic is zero, solution found, return n'
 			if (node->f == node->g) return node;
 			// Run IDA on n' with B and B'
-			expanded++;
 			r = ida(node, threshold, newThreshold);
+			expanded++;
 			// If r isn't NULL (i.e. found solution), return r
 			if (r != NULL) return r;
 		}
 		// If we didn't break the search in the loop, revert action
-		apply(node, rev_ops[move]);
+		apply(node, reverse_move(move));
 		node->g --;
 		node->last = last;
 	}
@@ -274,13 +272,13 @@ int main( int argc, char **argv )
 
 	print_state( initial_node.state );
 
-
 	/* solve */
 	float t0 = compute_current_time();
 
 	solution_length = IDA_control_loop();
 
 	float tf = compute_current_time();
+
 
 	/* report results */
 	printf( "\nSolution = %d\n", solution_length);
