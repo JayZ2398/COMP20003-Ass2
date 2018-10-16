@@ -115,12 +115,6 @@ int manhattan( int* state )
 	return( sum );
 }
 
-/* Return the Manhattan distance between two positions */
-int taxicab(int init, int final) {
-	// Compute Manhattan dist (distance between present and final rows and cols)
-	return abs((final / 4) - (init / 4)) + abs((final % 4) - (init % 4));
-}
-
 /* return 1 if op is applicable in state, otherwise return 0 */
 int applicable( int op )
 {
@@ -148,13 +142,13 @@ void apply( node* n, int op )
 node* ida( node* node, int threshold, int* newThreshold )
 {
 	struct node *r = NULL;
-	int move;
+	int move, last = node->last;
 
 	// For each action
 	for (move = 0; move < MAX_MOVES; move++) {
 
-		// Skip testing move if not applicable
-		if (!applicable(move)) {
+		// Skip testing move if not applicable or was already made
+		if (!applicable(move) || reverse_move(move) == node->last) {
 			continue;
 		}
 
@@ -163,6 +157,7 @@ node* ida( node* node, int threshold, int* newThreshold )
 		apply(node, move);
 		node->g ++;
 		node->f = node->g + manhattan(node->state);
+		node->last = move;
 
 		// If f(n') is greater than the threshold
 		if (node->f > threshold) {
@@ -172,15 +167,15 @@ node* ida( node* node, int threshold, int* newThreshold )
 			// If heuristic is zero, solution found, return n'
 			if (node->f == node->g) return node;
 			// Run IDA on n' with B and B'
-			expanded++; level++;
+			expanded++;
 			r = ida(node, threshold, newThreshold);
-			level--;
 			// If r isn't NULL (i.e. found solution), return r
 			if (r != NULL) return r;
 		}
 		// If we didn't break the search in the loop, revert action
 		apply(node, rev_ops[move]);
 		node->g --;
+		node->last = last;
 	}
 	return( NULL );
 }
@@ -196,7 +191,6 @@ int IDA_control_loop(  ){
 	/* initialize statistics */
 	generated = 0;
 	expanded = 0;
-	level = 0;
 
 	/* compute initial threshold B */
 	initial_node.f = threshold = manhattan( initial_node.state );
@@ -347,4 +341,10 @@ int linear_conflicts(int *state) {
   }
 
 	return sum;
+}
+
+/* Return the Manhattan distance between two positions */
+int taxicab(int init, int final) {
+	// Compute Manhattan dist (distance between present and final rows and cols)
+	return abs((final / 4) - (init / 4)) + abs((final % 4) - (init % 4));
 }

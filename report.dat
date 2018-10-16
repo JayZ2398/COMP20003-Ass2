@@ -280,3 +280,54 @@ Puzzles/simple_puzzle_1
 Puzzles/simple_puzzle_1
 	Soulution = 4, Generated = 5, Expanded = 3, Time = 0.000000, Expanded/Second = inf
 
+Puzzles/simple_puzzle_1
+	Soulution = 8, Generated = 96, Expanded = 41, Time = 0.000000, Expanded/Second = inf
+
+Puzzles/simple_puzzle_3
+	Soulution = 4, Generated = 6, Expanded = 3, Time = 0.000000, Expanded/Second = inf
+
+Puzzles/medium_puzzle_1
+	Soulution = 45, Generated = 7377319, Expanded = 3636607, Time = 0.578000, Expanded/Second = 6291707.500000
+
+Puzzles/2.puzzle
+	Soulution = 55, Generated = 9012243, Expanded = 4636976, Time = 0.671000, Expanded/Second = 6910545.500000
+
+Puzzles/1.puzzle
+	Soulution = 57, Generated = 407409198, Expanded = 206131932, Time = 30.389999, Expanded/Second = 6782887.000000
+
+Puzzles/2.puzzle
+	Soulution = 57, Generated = 15614914, Expanded = 7786202, Time = 2.078000, Expanded/Second = 3746969.000000
+
+Puzzles/1.puzzle
+	Soulution = 57, Generated = 634239770, Expanded = 310914710, Time = 82.249001, Expanded/Second = 3780164.000000
+
+Puzzles/2.puzzle
+	Soulution = 55, Generated = 9012243, Expanded = 4636976, Time = 0.672000, Expanded/Second = 6900262.000000
+
+Puzzles/1.puzzle
+	Soulution = 57, Generated = 407409198, Expanded = 206131932, Time = 29.873999, Expanded/Second = 6900045.000000
+
+Puzzles/2.puzzle
+	Soulution = 55, Generated = 9012243, Expanded = 4636976, Time = 0.640000, Expanded/Second = 7245275.000000
+
+Puzzles/2.puzzle
+	Soulution = 55, Generated = 9012243, Expanded = 4636976, Time = 0.750000, Expanded/Second = 6182634.500000
+
+Puzzles/2.puzzle
+	Soulution = 55, Generated = 9012243, Expanded = 4636976, Time = 0.718000, Expanded/Second = 6458184.000000
+
+Puzzles/2.puzzle
+	Soulution = 55, Generated = 9012243, Expanded = 4636976, Time = 0.625000, Expanded/Second = 7419161.500000
+
+Puzzles/2.puzzle
+	Soulution = 55, Generated = 9012243, Expanded = 4636976, Time = 0.671000, Expanded/Second = 6910545.500000
+
+Puzzles/2.puzzle
+	Soulution = 55, Generated = 9012243, Expanded = 4636976, Time = 0.734000, Expanded/Second = 6317406.000000
+
+Puzzles/2.puzzle
+	Soulution = 55, Generated = 9012243, Expanded = 4636976, Time = 0.781000, Expanded/Second = 5937229.000000
+
+Puzzles/1.puzzle
+	Soulution = 57, Generated = 407409198, Expanded = 206131932, Time = 30.343000, Expanded/Second = 6793393.500000
+
