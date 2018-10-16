@@ -61,7 +61,7 @@ unsigned long expanded;
 #define INFTY INT_MAX
 #define MIN_MOVES 2
 #define MAX_MOVES 4
-#define CHARS 4 // maybe remove?
+#define CHARS 4
 #define PER_ROW 4
 
 /*
@@ -303,16 +303,20 @@ int main( int argc, char **argv )
 }
 
 /* Jack's functions */
+
+/*Copy node state between nodes.*/
 void copy_state(node* to, node* from) {
 	int i;
 	for (i = 0; i < TILES; i++) to->state[i] = from->state[i];
 	return;
 }
 
+/*Return the minimum of two integers.*/
 int min(int a, int b) {
 	return (a > b) ? b : a;
 }
 
+/*Calculate the reverse move for a given move.*/
 int reverse_move(int move) {
 	return (move == LEFT ? RIGHT : (move == RIGHT ? LEFT :
 		(move == UP ? DOWN : (move == DOWN ? UP : NONE))));
@@ -345,12 +349,16 @@ int manhat_linear(int *state) {
 	return sum;
 }
 
-/* Return the Manhattan distance between two positions */
+/* Return the Manhattan distance between two positions.*/
 int taxicab(int init, int final) {
-	// Compute Manhattan dist (distance between present and final rows and cols)
 	return abs((final / 4) - (init / 4)) + abs((final % 4) - (init % 4));
 }
 
+/*Heuristic function that implements:
+	- Manhattan distance
+	- Last moves optimisation (last move only) as taken from:
+		http://www.aaai.org/Papers/AAAI/1996/AAAI96-178.pdf
+*/
 int last_moves_manhattan(int *state) {
 	int sum = 0, i = 0, last_moves = 0, tile;
 
