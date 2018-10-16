@@ -262,3 +262,6 @@ Puzzles/simple_puzzle_5
 Puzzles/simple_puzzle_5
 	Soulution = 15, Generated = 22, Expanded = 14, Time = 0.002456, Expanded/Second = 5700.325684
 
+Puzzles/medium_puzzle_1
+	Soulution = 43, Generated = 4739675339, Expanded = 1605686058, Time = 133.880890, Expanded/Second = 11993392.000000
+

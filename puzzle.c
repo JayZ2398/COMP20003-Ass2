@@ -124,7 +124,6 @@ void apply( node* n, int op )
 {
 	int t;
 
-	printf("Applying move %s\n", moves[op]);
 	//find tile that has to be moved given the op and blank_pos
 	t = blank_pos + (op == 0 ? -1 : (op == 1 ? 1 : (op == 2 ? -4 : 4)));
 
@@ -134,7 +133,6 @@ void apply( node* n, int op )
 
 	//update blank pos
 	blank_pos = t;
-	printf("The blank is in position %d\n", blank_pos);
 }
 
 /* Recursive IDA */
@@ -157,22 +155,15 @@ node* ida( node* node, int threshold, int* newThreshold )
 		// Keep track of last move
 		current_move = ap_actions[i];
 		// Generate the new node, its cost (n.g + 1) and its estimated cost f = g+h
-		printf("### BEFORE\n");
-		print_state(node->state);
-		printf("### Apply move %s on %d\n", moves[current_move], blank_pos);
 		generated++;
 		apply(node, current_move);
 		node->g = node->g + 1;
 		node->f = node->g + manhattan(node->state);
 
-		printf("### AFTER\n");
-		print_state(node->state);
-
 		// If f(n') is greater than the threshold
 		if (node->f > threshold) {
 			// Update next preferred threshold
 			*newThreshold = min(*newThreshold, node->f);
-			printf("HEY");
 		} else { 		// Otherwise, investigate
 			// If heuristic is zero, solution found, return n'
 			if (node->f == node->g) return node;
@@ -185,10 +176,7 @@ node* ida( node* node, int threshold, int* newThreshold )
 		}
 		// If we didn't break the search in the loop, revert action
 		int reverse = reverse_move(current_move);
-		printf("### Revert move %s (%d) on %d\n", moves[reverse], reverse, blank_pos);
 		apply(node, reverse);
-		printf("### AFTER REVERT\n");
-		print_state(node->state);
 		node->g --;
 	}
 	return( NULL );
@@ -216,12 +204,12 @@ int IDA_control_loop(  ){
 		copy_state(&puzzle, &initial_node);
 		puzzle.g = 0;
 
-		printf("### Threshold = %d | blank_pos = %d \n# Initial node:\n", threshold, blank_pos);
-		print_state(puzzle.state);
+		printf("### Threshold = %d expanded ", threshold);
 
 		newThreshold = INFTY;
 
 		r = ida(&puzzle, threshold, &newThreshold);
+		printf("%16lu nodes\n", expanded);
 		if (r == NULL) threshold = newThreshold;
 	}
 
