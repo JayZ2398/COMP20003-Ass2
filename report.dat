@@ -265,3 +265,18 @@ Puzzles/simple_puzzle_5
 Puzzles/medium_puzzle_1
 	Soulution = 43, Generated = 4739675339, Expanded = 1605686058, Time = 133.880890, Expanded/Second = 11993392.000000
 
+Puzzles/simple_puzzle_1
+	Soulution = 4, Generated = 25, Expanded = 9, Time = 0.000000, Expanded/Second = inf
+
+Puzzles/medium_puzzle_1
+	Soulution = 45, Generated = 5216264844, Expanded = 1786619962, Time = 586.890015, Expanded/Second = 3044216.000000
+
+Puzzles/simple_puzzle_1
+	Soulution = 4, Generated = 25, Expanded = 9, Time = 0.000000, Expanded/Second = inf
+
+Puzzles/simple_puzzle_1
+	Soulution = 4, Generated = 25, Expanded = 9, Time = 0.000000, Expanded/Second = inf
+
+Puzzles/simple_puzzle_1
+	Soulution = 4, Generated = 5, Expanded = 3, Time = 0.000000, Expanded/Second = inf
+

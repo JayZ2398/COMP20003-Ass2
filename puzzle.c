@@ -19,12 +19,15 @@ typedef struct node{
 	int state[16];
 	int g;
 	int f;
+	int last;
 } node;
 
 /* Jack's functions */
 void copy_state(node* to, node* from);
 int min(int a, int b);
 int reverse_move(int move);
+int linear_conflicts(int *state);
+int taxicab(int init, int final);
 
 /**
  * Global Variables
@@ -52,6 +55,7 @@ unsigned long level;
 #define RIGHT 1
 #define UP 2
 #define DOWN 3
+#define NONE -1
 
 #define TILES 16
 #define INFTY INT_MAX
@@ -68,6 +72,7 @@ int ap_opRight[]  = { 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0 };
 int ap_opUp[]  = { 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 int ap_opDown[]  = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 };
 int *ap_ops[] = { ap_opLeft, ap_opRight, ap_opUp, ap_opDown };
+int rev_ops[] = { RIGHT, LEFT, DOWN, UP };
 
 char *moves[CHARS] = {"LEFT", "RIGHT", "UP", "DOWN"};
 
@@ -97,20 +102,24 @@ void printf_comma (long unsigned int n) {
 /* return the sum of manhattan distances from state to goal */
 int manhattan( int* state )
 {
-	int sum = 0, i = 0, pi, fi, taxicab;
+	int sum = 0, i = 0, final;
 
 	for (i = 0; i < TILES; i++) {
-		pi = i, fi = state[i];
+		final = state[i];
 		// Disregard blank misplacement
-		if (fi == 0) continue;
+		if (final == 0) continue;
 		// Compute Manhattan dist (distance between present and final rows and cols)
-		taxicab = abs((fi / 4) - (pi / 4)) + abs((fi % 4) - (pi % 4));
-		sum += taxicab;
+		sum += taxicab(i, final);
 	}
 
 	return( sum );
 }
 
+/* Return the Manhattan distance between two positions */
+int taxicab(int init, int final) {
+	// Compute Manhattan dist (distance between present and final rows and cols)
+	return abs((final / 4) - (init / 4)) + abs((final % 4) - (init % 4));
+}
 
 /* return 1 if op is applicable in state, otherwise return 0 */
 int applicable( int op )
@@ -139,25 +148,20 @@ void apply( node* n, int op )
 node* ida( node* node, int threshold, int* newThreshold )
 {
 	struct node *r = NULL;
-	int current_move;
-
-	// Generate possible actions
-	int ap_actions[4];
-	int actions = 0, i;
-	for (i = 0; i < MAX_MOVES; i++) {
-		if (applicable(i)) {
-			ap_actions[actions++] = i;
-		}
-	}
+	int move;
 
 	// For each action
-	for (i = 0; i < actions; i++) {
-		// Keep track of last move
-		current_move = ap_actions[i];
+	for (move = 0; move < MAX_MOVES; move++) {
+
+		// Skip testing move if not applicable
+		if (!applicable(move)) {
+			continue;
+		}
+
 		// Generate the new node, its cost (n.g + 1) and its estimated cost f = g+h
 		generated++;
-		apply(node, current_move);
-		node->g = node->g + 1;
+		apply(node, move);
+		node->g ++;
 		node->f = node->g + manhattan(node->state);
 
 		// If f(n') is greater than the threshold
@@ -175,8 +179,7 @@ node* ida( node* node, int threshold, int* newThreshold )
 			if (r != NULL) return r;
 		}
 		// If we didn't break the search in the loop, revert action
-		int reverse = reverse_move(current_move);
-		apply(node, reverse);
+		apply(node, rev_ops[move]);
 		node->g --;
 	}
 	return( NULL );
@@ -258,11 +261,12 @@ int main( int argc, char **argv )
 				tile = strtok( NULL, " " );
 			}
 	}
+
 	else{
 		fprintf( stderr, "Filename empty\"\n" );
 		return( -2 );
-
 	}
+	fclose(initFile);
 
 	if( i != 16 )
 	{
@@ -317,5 +321,30 @@ int min(int a, int b) {
 }
 
 int reverse_move(int move) {
-	return (move == LEFT ? RIGHT : (move == RIGHT ? LEFT : (move == UP ? DOWN : UP)));
+	return (move == LEFT ? RIGHT : (move == RIGHT ? LEFT :
+		(move == UP ? DOWN : (move == DOWN ? UP : NONE))));
+}
+
+/*Compute the linear conflicts for a given state for the heuristic function.*/
+int linear_conflicts(int *state) {
+	int sum = 0, i;
+	int tile, above, prev = INFTY;
+
+  for (i = 0; i < TILES; i++) {
+    tile = state[i];
+    // Detect conflicts in row
+    if (tile == prev - 1 && tile/4 == i/4) {
+      sum += 2;
+    }
+    // Detect conflicts in columns
+    if (i > 4) {
+      above = state[i - 4];
+      if (tile == above - 4) {
+        sum += 2;
+      }
+    }
+    prev = tile;
+  }
+
+	return sum;
 }
