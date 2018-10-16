@@ -26,7 +26,7 @@ typedef struct node{
 void copy_state(node* to, node* from);
 int min(int a, int b);
 int reverse_move(int move);
-int linear_conflicts(int *state);
+int manhat_linear(int *state);
 int taxicab(int init, int final);
 
 /**
@@ -320,15 +320,17 @@ int reverse_move(int move) {
 }
 
 /*Compute the linear conflicts for a given state for the heuristic function.*/
-int linear_conflicts(int *state) {
+int manhat_linear(int *state) {
 	int sum = 0, i;
 	int tile, above, prev = INFTY;
 
   for (i = 0; i < TILES; i++) {
-    tile = state[i];
+		tile = state[i];
+		if (tile == 0) continue;
+		sum += taxicab(i, tile);
     // Detect conflicts in row
     if (tile == prev - 1 && tile/4 == i/4) {
-      sum += 2;
+			sum += 2;
     }
     // Detect conflicts in columns
     if (i > 4) {
